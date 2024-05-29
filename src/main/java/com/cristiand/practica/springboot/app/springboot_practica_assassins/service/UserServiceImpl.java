@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
         theUser.setPassword(passwordEncoder.encode(theUser.getPassword()));
 
         // Establecer el valor de enabled si no se proporciona
-        theUser.setEnabled(theUser.isEnabled() != null ? theUser.isEnabled() : true);
+        theUser.setEnabled(theUser.getEnabled() != null ? theUser.getEnabled() : true);
 
         // Obtener el rol por defecto "ROLE_USER"
         Role defaultRole = roleRepository.findByName("ROLE_USER");

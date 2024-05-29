@@ -2,6 +2,9 @@ package com.cristiand.practica.springboot.app.springboot_practica_assassins.enti
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,6 +39,7 @@ public class User {
 
     @Column(name="password")
     @NotBlank
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Column(name="enabled")
@@ -53,6 +57,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"),
             uniqueConstraints = { @UniqueConstraint(columnNames = {"user_id", "role_id"}) }
     )
+    @JsonIgnoreProperties({"users", "handler", "hibernateLazyInitializer"}) // Ignorar la propiedad 'users' durante la serialización/deserialización
     private List<Role> roles;
     
     // -----------------------------
@@ -113,7 +118,7 @@ public class User {
         this.roles = roles;
     }
     
-    public Boolean isEnabled() {
+    public Boolean getEnabled() {
         return enabled;
     }
 

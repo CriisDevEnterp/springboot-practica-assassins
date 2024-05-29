@@ -1,10 +1,15 @@
 package com.cristiand.practica.springboot.app.springboot_practica_assassins.entity;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -25,6 +30,9 @@ public class Role {
     // ------------------
     // TODO: Definir FK
     // ------------------
+    @JsonIgnoreProperties({"roles", "handler", "hibernateLazyInitializer"}) // Ignorar la propiedad 'roles' durante la serialización/deserialización
+    @ManyToMany(mappedBy = "roles")
+    private List<User> users;
 
     // -----------------------------
     // TODO: Definir constructores
@@ -35,6 +43,11 @@ public class Role {
         this.name = name;
     }
     
+    public Role(String name, List<User> users) {
+        this.name = name;
+        this.users = users;
+    }
+
     // ---------------------------------
     // TODO: Definir getters & setters
     // ---------------------------------
@@ -53,13 +66,21 @@ public class Role {
     public void setName(String name) {
         this.name = name;
     }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
     
     // -------------------------
     // TODO: Definir toString
     // -------------------------
     @Override
     public String toString() {
-        return "Role [id=" + id + ", name=" + name + "]";
+        return "Role [id=" + id + ", name=" + name + ", users=" + users + "]";
     }
     
 }
