@@ -1,0 +1,22 @@
+
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(20) NOT NULL,
+  password VARCHAR(60) NOT NULL,
+  enabled TINYINT NOT NULL DEFAULT 1,
+  UNIQUE (username)
+);
+
+CREATE TABLE roles (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(45) NOT NULL,
+  UNIQUE (name)
+);
+
+CREATE TABLE users_roles (
+  user_id INT,
+  role_id INT,
+  PRIMARY KEY (user_id, role_id),
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  FOREIGN KEY (role_id) REFERENCES roles(id)
+);
