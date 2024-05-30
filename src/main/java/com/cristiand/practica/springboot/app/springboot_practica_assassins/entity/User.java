@@ -2,6 +2,7 @@ package com.cristiand.practica.springboot.app.springboot_practica_assassins.enti
 
 import java.util.List;
 
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.validation.ExistsByUsername;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -35,6 +36,7 @@ public class User {
     @Column(name="username", unique = true)
     @NotBlank
     @Size(min = 4, max = 12)
+    @ExistsByUsername
     private String username;
 
     @Column(name="password")

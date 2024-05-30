@@ -9,5 +9,7 @@ public interface UserService {
     List<User> findAll();
 
     User save(User theUser);
+
+    boolean existsByUsername(String username);
     
 }
