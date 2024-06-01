@@ -1,14 +1,14 @@
 package com.cristiand.practica.springboot.app.springboot_practica_assassins.service;
 
-import java.util.List;
-
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.CreateUserDto;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.User;
+import java.util.List;
 
 public interface UserService {
     
     List<User> findAll();
 
-    User save(User theUser);
+    User save(CreateUserDto theUserDto);
 
     boolean existsByUsername(String username);
     

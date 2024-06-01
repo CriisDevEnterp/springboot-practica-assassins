@@ -1,21 +1,20 @@
 package com.cristiand.practica.springboot.app.springboot_practica_assassins.service;
 
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.dao.RoleRepository;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.dao.UserRepository;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.CreateUserDto;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.Role;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.User;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.cristiand.practica.springboot.app.springboot_practica_assassins.dao.RoleRepository;
-import com.cristiand.practica.springboot.app.springboot_practica_assassins.dao.UserRepository;
-import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.Role;
-import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.User;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -27,21 +26,24 @@ public class UserServiceImpl implements UserService {
     private RoleRepository roleRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(readOnly = true)
     public List<User> findAll() {
-        // TODO: Función para retornar lista de usuarios
         List<User> users = userRepository.findAll();
-        // Inicializar la colección de roles para cada usuario antes de devolverlos
-        users.forEach(user -> user.getRoles().size());
         return users;
     }
 
     @Override
     @Transactional
-    public User save(User theUser) {
+    public User save(CreateUserDto theUserDto) {
+        User theUser = new User();
+        theUser.setUsername(theUserDto.username());
+        theUser.setPassword(theUserDto.password());
+        theUser.setEnabled(theUserDto.enabled());
+        theUser.setRoles(theUserDto.roles());
+
         // Cifrar la contraseña del usuario
         theUser.setPassword(passwordEncoder.encode(theUser.getPassword()));
 

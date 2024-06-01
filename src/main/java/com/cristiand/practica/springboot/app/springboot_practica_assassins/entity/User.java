@@ -1,11 +1,8 @@
 package com.cristiand.practica.springboot.app.springboot_practica_assassins.entity;
 
-import java.util.List;
-
-import com.cristiand.practica.springboot.app.springboot_practica_assassins.validation.ExistsByUsername;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.LoginRequest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,8 +15,8 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import java.util.List;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Table(name = "users")
@@ -34,13 +31,9 @@ public class User {
     private int id;
 
     @Column(name="username", unique = true)
-    @NotBlank
-    @Size(min = 4, max = 12)
-    @ExistsByUsername
     private String username;
 
     @Column(name="password")
-    @NotBlank
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
@@ -50,7 +43,7 @@ public class User {
     // ------------------
     // TODO: Definir FK
     // ------------------
-    @ManyToMany(fetch = FetchType.LAZY,
+    @ManyToMany(fetch = FetchType.EAGER,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
             CascadeType.DETACH, CascadeType.REFRESH})
     @JoinTable(
@@ -135,6 +128,10 @@ public class User {
     public String toString() {
         return "User [id=" + id + ", username=" + username + ", password=" + password + ", enabled=" + enabled
                 + ", roles=" + roles + "]";
+    }
+
+    public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(loginRequest.password(), this.password);
     }
     
 }
