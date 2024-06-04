@@ -4,11 +4,8 @@ import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.C
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.User;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.service.UserService;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.util.ValidationUtils;
-
 import jakarta.validation.Valid;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

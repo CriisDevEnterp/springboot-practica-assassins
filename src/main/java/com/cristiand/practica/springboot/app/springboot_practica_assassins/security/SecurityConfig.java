@@ -46,6 +46,8 @@ public class SecurityConfig {
             http.authorizeHttpRequests(
                 (authorize) -> authorize
                     .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/encryption/encrypt").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/encryption/decrypt").permitAll()
                     .requestMatchers(HttpMethod.POST, "/login").permitAll()
                     .requestMatchers("/h2-console/**").permitAll()
                     .anyRequest().authenticated()

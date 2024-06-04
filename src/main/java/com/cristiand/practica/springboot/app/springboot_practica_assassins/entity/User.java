@@ -1,6 +1,5 @@
 package com.cristiand.practica.springboot.app.springboot_practica_assassins.entity;
 
-import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.LoginRequest;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.CascadeType;
@@ -16,7 +15,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.util.List;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Entity
 @Table(name = "users")
@@ -128,10 +126,6 @@ public class User {
     public String toString() {
         return "User [id=" + id + ", username=" + username + ", password=" + password + ", enabled=" + enabled
                 + ", roles=" + roles + "]";
-    }
-
-    public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
-        return passwordEncoder.matches(loginRequest.password(), this.password);
     }
     
 }
