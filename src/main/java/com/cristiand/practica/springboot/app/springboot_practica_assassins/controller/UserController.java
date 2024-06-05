@@ -38,7 +38,6 @@ public class UserController {
     @PostMapping("/search")
     @PreAuthorize("hasAuthority('SCOPE_ROLE_ADMIN')")
     public ResponseEntity<List<User>> searchUsers(@RequestBody(required = false) FindUserDto findUserDto) {
-        System.out.println(findUserDto);
         List<User> theUsers = userService.filterUsers(findUserDto);
         return new ResponseEntity<>(theUsers, HttpStatus.OK);
     }

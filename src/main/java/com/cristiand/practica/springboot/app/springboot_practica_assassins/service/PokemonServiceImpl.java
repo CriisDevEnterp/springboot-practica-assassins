@@ -15,12 +15,12 @@ public class PokemonServiceImpl implements PokemonService {
     private static final String FETCH_ERROR_MESSAGE = "An error occurred while fetching the Pokemon info";
     private static final String UNEXPECTED_ERROR_MESSAGE = "An unexpected error occurred";
 
-    @Value("${pokemon.api.url}")
     private String pokemonApiUrl;
 
     private final RestTemplate restTemplate;
 
-    public PokemonServiceImpl(RestTemplate restTemplate) {
+    public PokemonServiceImpl(@Value("${pokemon.api.url}") String pokemonApiUrl, RestTemplate restTemplate) {
+        this.pokemonApiUrl = pokemonApiUrl;
         this.restTemplate = restTemplate;
     }
 

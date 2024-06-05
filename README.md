@@ -35,6 +35,13 @@ Este es un proyecto de práctica para aprender y trabajar con Spring Boot.
     java -jar target/db-h2.jar
     ```
 
+### Cargar Endpoints en POSTMAN
+
+1. Importar el siguiente archivo en postman que está dentro de la siguiente ruta:
+    ```bash
+    src\main\resources\templates\Spring Practica for Assassins.postman_collection.json
+    ```
+
 ## Contribuciones
 
 Las contribuciones son bienvenidas. Por favor, abre un "issue" para discutir lo que te gustaría cambiar.

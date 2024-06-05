@@ -6,6 +6,9 @@ import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.C
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.FindUserDto;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.Role;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.User;
+
+import jakarta.validation.ValidationException;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -32,6 +35,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User save(CreateUserDto theUserDto) {
+        // Validar los datos del usuario
+        validateUserData(theUserDto);
+
+        // Continuar con el proceso de guardar el usuario
         User theUser = new User();
         theUser.setUsername(theUserDto.username());
         theUser.setPassword(theUserDto.password());
@@ -65,6 +72,12 @@ public class UserServiceImpl implements UserService {
 
         // Guardar el usuario en la base de datos dentro de una transacción
         return userRepository.save(theUser);
+    }
+
+    private void validateUserData(CreateUserDto theUserDto) {
+        if (theUserDto.username().isEmpty() || theUserDto.password().isEmpty()) {
+            throw new ValidationException("El nombre de usuario y la contraseña no pueden estar vacíos");
+        }
     }
 
     @Override

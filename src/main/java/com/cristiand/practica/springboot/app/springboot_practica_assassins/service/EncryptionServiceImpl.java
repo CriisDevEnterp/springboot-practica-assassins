@@ -1,26 +1,30 @@
 package com.cristiand.practica.springboot.app.springboot_practica_assassins.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.Base64;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import java.util.Base64;
 
 @Service
 public class EncryptionServiceImpl implements EncryptionService {
 
-    @Value("${aes.secret.key}")
-    private String secretKey;
+    private final String secretKey;
+    private final String initVector;
 
-    @Value("${aes.init.vector}")
-    private String initVector;
-
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    public EncryptionServiceImpl(@Value("${aes.secret.key}") String secretKey,
+                                 @Value("${aes.init.vector}") String initVector) {
+        this.secretKey = secretKey;
+        this.initVector = initVector;
+    }
 
     @Override
     public String encrypt(String decryptedData) {
+        if (decryptedData == null) {
+            throw new IllegalArgumentException("Error while encrypting data: input data is null");
+        }
         try {
             IvParameterSpec iv = new IvParameterSpec(Base64.getDecoder().decode(initVector));
             SecretKeySpec skeySpec = new SecretKeySpec(Base64.getDecoder().decode(secretKey), "AES");
@@ -35,12 +39,15 @@ public class EncryptionServiceImpl implements EncryptionService {
         }
     }
 
-
     @Override
-    public Object decrypt(String encryptedData) {        
+    public Object decrypt(String encryptedData) {
+        if (encryptedData == null) {
+            throw new IllegalArgumentException("Error while decrypting data: input data is null");
+        }
+
         // Elimina las comillas dobles al inicio y al final de la cadena
         encryptedData = encryptedData.replaceAll("^\"|\"$", "");
-        
+
         try {
             IvParameterSpec iv = new IvParameterSpec(Base64.getDecoder().decode(initVector));
             SecretKeySpec skeySpec = new SecretKeySpec(Base64.getDecoder().decode(secretKey), "AES");
@@ -49,10 +56,9 @@ public class EncryptionServiceImpl implements EncryptionService {
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
 
             byte[] original = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
-            return objectMapper.readValue(new String(original), Object.class);
+            return new String(original);
         } catch (Exception ex) {
-            throw new RuntimeException("Error while decrypting data", ex.getCause());
+            throw new RuntimeException("Error while decrypting data", ex);
         }
     }
-
 }
