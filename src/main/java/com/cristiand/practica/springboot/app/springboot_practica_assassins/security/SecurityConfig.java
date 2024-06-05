@@ -45,7 +45,7 @@ public class SecurityConfig {
         return 
             http.authorizeHttpRequests(
                 (authorize) -> authorize
-                    .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/users/create").permitAll()
                     .requestMatchers(HttpMethod.POST, "/encryption/encrypt").permitAll()
                     .requestMatchers(HttpMethod.POST, "/encryption/decrypt").permitAll()
                     .requestMatchers(HttpMethod.POST, "/login").permitAll()

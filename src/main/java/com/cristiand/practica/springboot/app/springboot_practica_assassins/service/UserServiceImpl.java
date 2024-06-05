@@ -3,6 +3,7 @@ package com.cristiand.practica.springboot.app.springboot_practica_assassins.serv
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.dao.RoleRepository;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.dao.UserRepository;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.CreateUserDto;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.FindUserDto;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.Role;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.User;
 import java.util.ArrayList;
@@ -29,13 +30,6 @@ public class UserServiceImpl implements UserService {
     private BCryptPasswordEncoder passwordEncoder;
 
     @Override
-    @Transactional(readOnly = true)
-    public List<User> findAll() {
-        List<User> users = userRepository.findAll();
-        return users;
-    }
-
-    @Override
     @Transactional
     public User save(CreateUserDto theUserDto) {
         User theUser = new User();
@@ -57,10 +51,10 @@ public class UserServiceImpl implements UserService {
         Set<Role> theRoles = new HashSet<>();
         if (theUser.getRoles() != null) {
             theRoles = theUser.getRoles().stream()
-                .map(Role::getName)
-                .map(roleRepository::findByName)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+                    .map(Role::getName)
+                    .map(roleRepository::findByName)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
         }
 
         // Asegurarse de que "ROLE_USER" esté siempre presente
@@ -76,6 +70,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
+    }
+
+    @Override
+    public List<User> filterUsers(FindUserDto findUserDto) {
+        if (findUserDto == null) { // Corregido para evitar la excepción NullPointerException
+            return userRepository.findAll();
+        } else {
+            return userRepository.findByUsernameContaining(findUserDto.username());
+        }
     }
 
 }
