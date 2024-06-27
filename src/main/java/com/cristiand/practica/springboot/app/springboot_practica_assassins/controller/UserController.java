@@ -145,6 +145,9 @@ public class UserController {
     @PostMapping("")
     public ResponseEntity<?> save(@Valid @ModelAttribute CreateUserDto theUserDto, BindingResult bindingResult)
             throws CustomAssassinException, Exception {
+        System.out.println("----------------------------------");
+        System.out.println(theUserDto);
+        System.out.println("----------------------------------");
         // Validar el objeto CreateUserDto usando las anotaciones de validación.
         if (bindingResult.hasErrors()) {
             ValidationUtils.handleValidationErrors(bindingResult);

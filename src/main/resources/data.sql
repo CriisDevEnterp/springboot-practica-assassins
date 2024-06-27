@@ -5,31 +5,31 @@ INSERT INTO `roles` (`name`) VALUES ('ROLE_RECEPCIONIST');
 
 -- Inserts para la tabla `users`
 INSERT INTO `users` (`username`, `password`, `enabled`, `first_name`, `last_name`, `email`, `create_at`, `profile_image`)
-VALUES ('david', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'David', 'Ramirez', 'david@prueba.com', '2024-06-20', 'static/images/no-user.jpg');
+VALUES ('david', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'David', 'Ramirez', 'david@prueba.com', CURRENT_TIMESTAMP, 'static/images/no-user.jpg');
 
 INSERT INTO `users` (`username`, `password`, `enabled`, `first_name`, `last_name`, `email`, `create_at`, `profile_image`)
-VALUES ('emmanuel', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'Emmanuel', 'Lopez', 'emmanuel@prueba.com', '2024-06-20', 'static/images/no-user.jpg');
+VALUES ('emmanuel', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'Emmanuel', 'Lopez', 'emmanuel@prueba.com', CURRENT_TIMESTAMP, 'static/images/no-user.jpg');
 
 INSERT INTO `users` (`username`, `password`, `enabled`, `first_name`, `last_name`, `email`, `create_at`, `profile_image`)
-VALUES ('ricardo', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'Ricardo', 'Castillo', 'ricardo@prueba.com', '2024-06-20', 'static/images/no-user.jpg');
+VALUES ('ricardo', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'Ricardo', 'Castillo', 'ricardo@prueba.com', CURRENT_TIMESTAMP, 'static/images/no-user.jpg');
 
 INSERT INTO `users` (`username`, `password`, `enabled`, `first_name`, `last_name`, `email`, `create_at`, `profile_image`)
-VALUES ('fabian', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'Fabian', 'Santillan', 'fabian@prueba.com', '2024-06-20', 'static/images/no-user.jpg');
+VALUES ('fabian', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'Fabian', 'Santillan', 'fabian@prueba.com', CURRENT_TIMESTAMP, 'static/images/no-user.jpg');
 
 INSERT INTO `users` (`username`, `password`, `enabled`, `first_name`, `last_name`, `email`, `create_at`, `profile_image`)
-VALUES ('ernesto', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'Ernesto', 'Ramos', 'ernesto@prueba.com', '2024-06-20', 'static/images/no-user.jpg');
+VALUES ('ernesto', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'Ernesto', 'Ramos', 'ernesto@prueba.com', CURRENT_TIMESTAMP, 'static/images/no-user.jpg');
 
 INSERT INTO `users` (`username`, `password`, `enabled`, `first_name`, `last_name`, `email`, `create_at`, `profile_image`)
-VALUES ('brian', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'Brian', 'Hernandez', 'brian@prueba.com', '2024-06-20', 'static/images/no-user.jpg');
+VALUES ('brian', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'Brian', 'Hernandez', 'brian@prueba.com', CURRENT_TIMESTAMP, 'static/images/no-user.jpg');
 
 INSERT INTO `users` (`username`, `password`, `enabled`, `first_name`, `last_name`, `email`, `create_at`, `profile_image`)
-VALUES ('cristopher', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'Cristopher', 'Hernandez', 'cristopher@prueba.com', '2024-06-20', 'static/images/no-user.jpg');
+VALUES ('cristopher', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'Cristopher', 'Hernandez', 'cristopher@prueba.com', CURRENT_TIMESTAMP, 'static/images/no-user.jpg');
 
 INSERT INTO `users` (`username`, `password`, `enabled`, `first_name`, `last_name`, `email`, `create_at`, `profile_image`)
-VALUES ('luis', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'Luis', 'Torres', 'luis@prueba.com', '2024-06-20', 'static/images/no-user.jpg');
+VALUES ('luis', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'Luis', 'Torres', 'luis@prueba.com', CURRENT_TIMESTAMP, 'static/images/no-user.jpg');
 
 INSERT INTO `users` (`username`, `password`, `enabled`, `first_name`, `last_name`, `email`, `create_at`, `profile_image`)
-VALUES ('yorman', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'Yorman', 'Rojas', 'yorman@prueba.com', '2024-06-20', 'static/images/no-user.jpg');
+VALUES ('yorman', '$2a$10$h36sqOFp/2P9PH8rI.SaZedB5WOTRLxkBnNqaXMIcTzamOW/j.xpC', 1, 'Yorman', 'Rojas', 'yorman@prueba.com', CURRENT_TIMESTAMP, 'static/images/no-user.jpg');
 
 
 -- Inserts para la tabla `users_roles`

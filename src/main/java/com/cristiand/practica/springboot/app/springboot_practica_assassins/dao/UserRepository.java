@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -14,11 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Repositorio para la entidad {@link User}.
+ * Extiende de {@link ValidationRepository} que contiene validaciones.
  * Proporciona métodos para realizar operaciones CRUD y consultas personalizadas
  * sobre los usuarios en la base de datos.
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends ValidationRepository<User, Long> {
 
     /**
      * Busca un usuario por su nombre de usuario, cargando también sus roles
@@ -85,14 +85,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Transactional(readOnly = true)
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.id = :id")
     public Optional<User> findByIdWithRoles(@Param("id") Long id) throws DataAccessException;
-
-    /**
-     * Verifica si existe un usuario con un nombre de usuario dado.
-     *
-     * @param username el nombre de usuario a verificar.
-     * @return true si existe un usuario con el nombre de usuario dado, false en
-     *         caso contrario.
-     */
-    public boolean existsByUsername(String username);
 
 }

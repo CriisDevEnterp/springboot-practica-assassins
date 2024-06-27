@@ -85,8 +85,8 @@ public class TokenUtil {
                 .expiresAt(now.plusSeconds(expiresIn))
                 .claim("scope", scopes)
                 .claim("username", user.getUsername())
-                .claim("first_name", user.getFirstName())
-                .claim("last_name", user.getLastName())
+                .claim("firstName", user.getFirstName())
+                .claim("lastName", user.getLastName())
                 .claim("email", user.getEmail())
                 .claim("jti", UUID.randomUUID().toString())
                 .build();

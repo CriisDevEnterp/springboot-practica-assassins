@@ -1,5 +1,6 @@
 package com.cristiand.practica.springboot.app.springboot_practica_assassins.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.CascadeType;
@@ -66,7 +67,8 @@ public class User implements Serializable {
     private String email;
 
     @Column(name = "create_at", nullable = false, updatable = false)
-    @Temporal(TemporalType.DATE)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "America/Mexico_City")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
     @Column(name = "profile_image", nullable = false)
