@@ -13,50 +13,83 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import jakarta.persistence.UniqueConstraint;
+import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
+/**
+ * Clase que representa la entidad de un usuario en la base de datos.
+ * Esta clase está mapeada a la tabla "users" en la base de datos.
+ * Implementa Serializable para permitir que sus instancias sean serializadas.
+ */
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements Serializable {
 
-    // -----------------------
-    // TODO: Definir campos
-    // -----------------------
+    /**
+     * Identificador de versión para la serialización de la clase.
+     * Esto asegura que la clase sea compatible durante el proceso de serialización
+     * y deserialización.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * -----------------------
+     * Campos
+     * -----------------------
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Long id;
 
-    @Column(name="username", unique = true)
+    @Column(name = "username", nullable = false, unique = true)
     private String username;
 
-    @Column(name="password")
+    @Column(name = "password", nullable = false)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @Column(name="enabled")
+    @Column(name = "enabled")
     private Boolean enabled;
 
-    // ------------------
-    // TODO: Definir FK
-    // ------------------
-    @ManyToMany(fetch = FetchType.EAGER,
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-            CascadeType.DETACH, CascadeType.REFRESH})
-    @JoinTable(
-            name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"),
-            uniqueConstraints = { @UniqueConstraint(columnNames = {"user_id", "role_id"}) }
-    )
-    @JsonIgnoreProperties({"users", "handler", "hibernateLazyInitializer"}) // Ignorar la propiedad 'users' durante la serialización/deserialización
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
+
+    @Column(name = "last_name", nullable = false)
+    private String lastName;
+
+    @Column(name = "email", nullable = false, unique = true)
+    private String email;
+
+    @Column(name = "create_at", nullable = false, updatable = false)
+    @Temporal(TemporalType.DATE)
+    private Date createdAt;
+
+    @Column(name = "profile_image", nullable = false)
+    private String profileImage;
+
+    /**
+     * -----------------------
+     * Relaciones
+     * -----------------------
+     */
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"), uniqueConstraints = {
+            @UniqueConstraint(columnNames = { "user_id", "role_id" }) })
+    @JsonIgnoreProperties({ "users", "handler", "hibernateLazyInitializer" })
     private List<Role> roles;
-    
-    // -----------------------------
-    // TODO: Definir constructores
-    // -----------------------------
-    public User() {}
+
+    /**
+     * -----------------------
+     * Constructores
+     * -----------------------
+     */
+    public User() {
+    }
 
     public User(String username, String password) {
         this.username = username;
@@ -68,7 +101,7 @@ public class User {
         this.password = password;
         this.roles = roles;
     }
-    
+
     public User(String username, String password, boolean enabled, List<Role> roles) {
         this.username = username;
         this.password = password;
@@ -76,14 +109,29 @@ public class User {
         this.roles = roles;
     }
 
-    // ---------------------------------
-    // TODO: Definir getters & setters
-    // ---------------------------------
-    public int getId() {
+    public User(String username, String password, Boolean enabled, String firstName, String lastName, String email,
+            Date createdAt, String profileImage, List<Role> roles) {
+        this.username = username;
+        this.password = password;
+        this.enabled = enabled;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.createdAt = createdAt;
+        this.profileImage = profileImage;
+        this.roles = roles;
+    }
+
+    /**
+     * -----------------------
+     * Getters & Setters
+     * -----------------------
+     */
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -103,14 +151,6 @@ public class User {
         this.password = password;
     }
 
-    public List<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-    
     public Boolean getEnabled() {
         return enabled;
     }
@@ -118,14 +158,73 @@ public class User {
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
-    
-    // -------------------------
-    // TODO: Definir toString
-    // -------------------------
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    /**
+     * -----------------------
+     * toString()
+     * -----------------------
+     */
     @Override
     public String toString() {
-        return "User [id=" + id + ", username=" + username + ", password=" + password + ", enabled=" + enabled
-                + ", roles=" + roles + "]";
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", enabled=" + enabled +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", createdAt=" + createdAt +
+                ", profileImage='" + profileImage + '\'' +
+                ", roles=" + roles +
+                '}';
     }
-    
+
 }

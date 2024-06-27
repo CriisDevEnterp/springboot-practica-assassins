@@ -1,29 +1,41 @@
 package com.cristiand.practica.springboot.app.springboot_practica_assassins.util;
 
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.enums.ErrorCode;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.exception.domain.CustomAssassinException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 
+/**
+ * Utilidad para manejar errores de validación.
+ */
 public class ValidationUtils {
-    
+
     /**
-    * Maneja los errores de validación y devuelve un ResponseEntity con los detalles del error.
-    * 
-    * @param bindingResult el resultado del enlace que contiene los errores de validación
-    * @return ResponseEntity con los detalles del error
-    */
-    public static ResponseEntity<Map<String, String>> handleValidationErrors(BindingResult bindingResult) {
-        // Mapa para almacenar los errores de campo
-        Map<String, String> errors = new HashMap<>();
+     * Maneja los errores de validación y lanza una CustomAssassinException con los
+     * detalles del error.
+     *
+     * @param bindingResult el resultado del enlace que contiene los errores de
+     *                      validación.
+     * @throws CustomAssassinException si hay errores de validación.
+     */
+    public static void handleValidationErrors(BindingResult bindingResult) throws CustomAssassinException {
+        if (bindingResult.hasErrors()) {
+            Map<String, Object> errors = new HashMap<>();
 
-        // Itera a través de los errores de campo y los agrega al mapa de errores
-        bindingResult.getFieldErrors().forEach(err -> {
-            errors.put(err.getField(), "El campo " + err.getField() + " " + err.getDefaultMessage());
-        });
+            // Recorre los errores de campo y los agrega al mapa de errores.
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                String fieldName = fieldError.getField();
+                String errorMessage = fieldError.getDefaultMessage();
+                errors.put(fieldName, errorMessage);
+            }
 
-        // Devuelve un ResponseEntity con el estado de error de solicitud incorrecta y los detalles del error
-        return ResponseEntity.badRequest().body(errors);
+            // Lanza una excepción personalizada con los detalles de los errores.
+            throw new CustomAssassinException("Errores de validación.", ErrorCode.INVALID_REQUEST,
+                    Collections.unmodifiableMap(errors));
+        }
     }
 
 }

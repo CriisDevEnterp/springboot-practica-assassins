@@ -1,68 +1,77 @@
 package com.cristiand.practica.springboot.app.springboot_practica_assassins.service;
 
-import com.cristiand.practica.springboot.app.springboot_practica_assassins.dao.UserRepository;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.dao.TokenRepository;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.LoginRequest;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.LoginResponse;
-import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.Role;
-import java.time.Instant;
-import java.util.stream.Collectors;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
-import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.TokenResponse;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.User;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.util.TokenUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class TokenServiceImpl implements TokenService {
 
-    private final JwtEncoder jwtEncoder;
+    @Autowired
+    private TokenUtil tokenUtil;
 
-    private final UserRepository userRepository;
+    @Autowired
+    private JwtDecoder jwtDecoder;
 
-    private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private TokenRepository tokenRepository;
 
-    public TokenServiceImpl(JwtEncoder jwtEncoder, UserRepository userRepository,
-            BCryptPasswordEncoder passwordEncoder) {
-        this.jwtEncoder = jwtEncoder;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-
-
+    /**
+     * Servicio que maneja el proceso de inicio de sesión autenticando al usuario y
+     * generando tokens.
+     *
+     * @param loginRequest DTO que contiene las credenciales del usuario.
+     * @return LoginResponse que contiene los tokens de acceso y de refresco.
+     * @throws BadCredentialsException si las credenciales son inválidas.
+     */
     @Override
-    public LoginResponse login(LoginRequest loginRequest) {
-        var user = userRepository.findByUsername(loginRequest.username());
+    public LoginResponse login(LoginRequest loginRequest) throws BadCredentialsException {
+        // Autentica al usuario basado en las credenciales proporcionadas.
+        User user = tokenUtil.authenticateUser(loginRequest);
+        // Genera el token de acceso.
+        String accessToken = tokenUtil.createToken(user, TokenUtil.ACCESS_TOKEN_EXPIRES_IN);
+        // Genera el token de refresco.
+        String refreshToken = tokenUtil.createToken(user, TokenUtil.REFRESH_TOKEN_EXPIRES_IN);
 
-        if (user == null || !isLoginCorrect(loginRequest, passwordEncoder)) {
-            return new LoginResponse("", 0L);  // Retornar token vacío y expiración cero en caso de falla
-        }
-
-        var now = Instant.now();
-        var expiresIn = 300L;
-
-        var scopes = user.getRoles()
-                .stream()
-                .map(Role::getName)
-                .collect(Collectors.joining(" "));
-               
-        var claims = JwtClaimsSet.builder()
-                .issuer("mybackend")
-                .subject(String.valueOf(user.getId()))
-                .issuedAt(now)
-                .expiresAt(now.plusSeconds(expiresIn))
-                .claim("scope", scopes)
-                .build();
-
-        var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
-
-        return new LoginResponse(jwtValue, expiresIn);
+        // Crea y retorna la respuesta de inicio de sesión.
+        return tokenUtil.createLoginResponse(user, accessToken, refreshToken);
     }
 
+    /**
+     * Servicio que refresca el token de acceso utilizando el token de refresco.
+     *
+     * @param refreshToken El token de refresco.
+     * @return TokenResponse que contiene el nuevo token de acceso.
+     * @throws UsernameNotFoundException si el usuario no se encuentra.
+     */
+    @Override
+    public TokenResponse refreshAccessToken(String refreshToken) throws UsernameNotFoundException {
+        // Decodifica el token de refresco.
+        Jwt jwt = jwtDecoder.decode(refreshToken);
+        // Valida el token de refresco.
+        tokenUtil.validateRefreshToken(jwt);
 
-    public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
-        var user = userRepository.findByUsername(loginRequest.username());
-        return passwordEncoder.matches(loginRequest.password(), user.getPassword());
+        // Obtiene el ID del usuario del token.
+        Long userId = Long.valueOf(jwt.getSubject());
+        // Busca al usuario en el repositorio.
+        User user = tokenRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado."));
+
+        // Genera un nuevo token de acceso.
+        String newAccessToken = tokenUtil.createToken(user, TokenUtil.ACCESS_TOKEN_EXPIRES_IN);
+        // Retorna la respuesta con el nuevo token de acceso.
+        return new TokenResponse(newAccessToken, TokenUtil.ACCESS_TOKEN_EXPIRES_IN);
     }
-    
+
 }

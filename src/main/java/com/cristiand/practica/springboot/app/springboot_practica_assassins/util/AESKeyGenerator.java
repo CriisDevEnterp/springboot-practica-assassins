@@ -1,8 +1,5 @@
 package com.cristiand.practica.springboot.app.springboot_practica_assassins.util;
 
-/**
- * AESKeyGenerator
- */
 import java.io.FileWriter;
 import java.security.SecureRandom;
 import java.util.Base64;
@@ -10,8 +7,15 @@ import java.util.Properties;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
+/**
+ * Clase para generar una clave AES y un vector de inicialización (IV), y
+ * guardarlos en application.properties.
+ */
 public class AESKeyGenerator {
-    
+
+    /**
+     * Método principal para generar y guardar la clave AES y el IV.
+     */
     public static void main(String[] args) {
         try {
             // Generar clave secreta AES
@@ -40,5 +44,5 @@ public class AESKeyGenerator {
             e.printStackTrace();
         }
     }
-    
+
 }

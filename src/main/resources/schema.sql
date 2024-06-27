@@ -4,7 +4,13 @@ CREATE TABLE users (
   username VARCHAR(20) NOT NULL,
   password VARCHAR(60) NOT NULL,
   enabled TINYINT NOT NULL DEFAULT 1,
-  UNIQUE (username)
+  first_name VARCHAR(20) NOT NULL,
+  last_name VARCHAR(20) NOT NULL,
+  email VARCHAR(60) NOT NULL,
+  create_at DATE,
+  profile_image VARCHAR(255),
+  UNIQUE (username),
+  UNIQUE (email)
 );
 
 CREATE TABLE roles (

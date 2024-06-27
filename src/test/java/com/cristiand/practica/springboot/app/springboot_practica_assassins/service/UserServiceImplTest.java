@@ -1,114 +1,111 @@
 package com.cristiand.practica.springboot.app.springboot_practica_assassins.service;
 
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.CreateUserDto;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.User;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.exception.domain.CustomAssassinException;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.util.UserUtilTest;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import com.cristiand.practica.springboot.app.springboot_practica_assassins.dao.UserRepository;
-import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.CreateUserDto;
-import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.FindUserDto;
-import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.User;
-
-import jakarta.validation.ValidationException;
-
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Transactional
 public class UserServiceImplTest {
 
     @Autowired
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private UserUtilTest userUtilTest;
 
     @Test
-    public void testSaveUser_WithValidData() {
+    @DisplayName("Save User with Valid Data")
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public void testSaveUser_WithValidData() throws CustomAssassinException, Exception {
         // Arrange
-        String rawPassword = "password";
-        CreateUserDto createUserDto = new CreateUserDto("testUser", rawPassword, true, Collections.emptyList());
+        CreateUserDto createUserDto = userUtilTest.createDefaultCreateUserDto(
+                true,
+                "static/images/no-user.jpg",
+                "[{\"name\": \"ROLE_USER\"}, {\"name\": \"ROLE_ADMIN\"}, {\"name\": \"ROLE_RECEPCIONIST\"}]");
 
         // Act
         User savedUser = userService.save(createUserDto);
 
         // Assert
-        assertNotNull(savedUser);
-        assertEquals("testUser", savedUser.getUsername());
-        assertTrue(savedUser.getEnabled());
+        userUtilTest.assertSavedUser(savedUser, true, "no-user.jpg", createUserDto);
 
-        // Verificar que la contraseña está cifrada correctamente
-        assertTrue(passwordEncoder.matches(rawPassword, savedUser.getPassword()));
     }
 
     @Test
-    public void testSaveUser_WithInvalidUsername() {
+    @DisplayName("Save User without Field Enabled")
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public void testSaveUser_WithoutFieldEnabled() throws CustomAssassinException, Exception {
         // Arrange
-        CreateUserDto createUserDto = new CreateUserDto("", "password", true, Collections.emptyList());
-
-        // Act & Assert
-        assertThrows(ValidationException.class, () -> userService.save(createUserDto));
-    }
-
-    @Test
-    public void testSaveUser_WithInvalidPassword() {
-        // Arrange
-        CreateUserDto createUserDto = new CreateUserDto("testUser", "", true, Collections.emptyList());
-
-        // Act & Assert
-        assertThrows(ValidationException.class, () -> userService.save(createUserDto));
-    }
-
-    @Test
-    public void testExistsByUsername_WhenUsernameExists() {
-        // Arrange
-        String existingUsername = "existingUser";
-        userRepository.save(new User(existingUsername, "password", true, Collections.emptyList()));
+        CreateUserDto createUserDto = userUtilTest.createDefaultCreateUserDto(
+                null,
+                "static/images/no-user.jpg",
+                "[{\"name\": \"ROLE_USER\"}, {\"name\": \"ROLE_ADMIN\"}, {\"name\": \"ROLE_RECEPCIONIST\"}]");
 
         // Act
-        boolean exists = userService.existsByUsername(existingUsername);
+        User savedUser = userService.save(createUserDto);
 
         // Assert
-        assertTrue(exists);
+        userUtilTest.assertSavedUser(savedUser, null, "no-user.jpg", createUserDto);
     }
 
     @Test
-    public void testExistsByUsername_WhenUsernameDoesNotExist() {
+    @DisplayName("Save User without Field Profile Image")
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public void testSaveUser_WithoutFieldProfileImage() throws CustomAssassinException, Exception {
         // Arrange
-        String nonExistingUsername = "nonExistingUser";
+        CreateUserDto createUserDto = userUtilTest.createDefaultCreateUserDto(
+                true,
+                null,
+                "[{\"name\": \"ROLE_USER\"}, {\"name\": \"ROLE_ADMIN\"}, {\"name\": \"ROLE_RECEPCIONIST\"}]");
 
         // Act
-        boolean exists = userService.existsByUsername(nonExistingUsername);
+        User savedUser = userService.save(createUserDto);
 
         // Assert
-        assertFalse(exists);
+        userUtilTest.assertSavedUser(savedUser, true, null, createUserDto);
     }
 
     @Test
-    public void testFilterUsers_WithExistingUsername() {
+    @DisplayName("Save User without Field Roles")
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public void testSaveUser_WithoutFieldRoles() throws CustomAssassinException, Exception {
         // Arrange
-        String username = "prueba";
-        userRepository.save(new User("prueba", "password", true, Collections.emptyList()));
+        CreateUserDto createUserDto = userUtilTest.createDefaultCreateUserDto(
+                true,
+                "static/images/no-user.jpg",
+                null);
 
         // Act
-        List<User> filteredUsers = userService.filterUsers(new FindUserDto(username));
+        User savedUser = userService.save(createUserDto);
 
         // Assert
-        assertEquals(1, filteredUsers.size());
+        userUtilTest.assertSavedUser(savedUser, true, "no-user.jpg", createUserDto);
     }
 
     @Test
-    public void testFilterUsers_WithNonExistingUsername() {
+    @DisplayName("Save User without Many Fields")
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    public void testSaveUser_WithoutManyFields() throws CustomAssassinException, Exception {
+        // Arrange
+        CreateUserDto createUserDto = userUtilTest.createDefaultCreateUserDto(
+                null,
+                null,
+                null);
+
         // Act
-        List<User> filteredUsers = userService.filterUsers(new FindUserDto("nonExistingUser"));
+        User savedUser = userService.save(createUserDto);
 
         // Assert
-        assertTrue(filteredUsers.isEmpty());
+        userUtilTest.assertSavedUser(savedUser, null, null, createUserDto);
     }
+
 }
