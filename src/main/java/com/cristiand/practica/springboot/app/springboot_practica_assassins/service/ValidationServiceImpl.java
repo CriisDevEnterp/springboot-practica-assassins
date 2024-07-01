@@ -28,4 +28,16 @@ public class ValidationServiceImpl implements ValidationService {
         return validationRepositoryUsers.existsByUsername(username);
     }
 
+    /**
+     * Verifica si existe una entidad con un correo dado.
+     *
+     * @param email el correo a verificar.
+     * @return true si existe una entidad con el correo dado, false en caso
+     *         contrario.
+     */
+    @Override
+    public boolean existsByEmail(String email) {
+        return validationRepositoryUsers.existsByEmail(email);
+    }
+
 }

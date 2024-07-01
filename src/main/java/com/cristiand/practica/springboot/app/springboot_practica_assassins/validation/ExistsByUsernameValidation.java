@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * Implementación del validador de la anotación @ExistsByUsername.
- * Verifica si el nombre de usuario ya existe en el sistema utilizando el servicio de validación.
+ * Verifica si el nombre de usuario ya existe en el sistema utilizando el
+ * servicio de validación.
  */
 @Component
 public class ExistsByUsernameValidation implements ConstraintValidator<ExistsByUsername, String> {
@@ -20,8 +21,9 @@ public class ExistsByUsernameValidation implements ConstraintValidator<ExistsByU
      * Verifica si el nombre de usuario es válido (no existe en el sistema).
      *
      * @param username el nombre de usuario a validar.
-     * @param context el contexto del validador de la restricción.
-     * @return true si el nombre de usuario no existe en el sistema, false en caso contrario.
+     * @param context  el contexto del validador de la restricción.
+     * @return true si el nombre de usuario no existe en el sistema, false en caso
+     *         contrario.
      */
     @Override
     public boolean isValid(String username, ConstraintValidatorContext context) {
@@ -30,15 +32,15 @@ public class ExistsByUsernameValidation implements ConstraintValidator<ExistsByU
         }
 
         boolean usernameExists = validationService.existsByUsername(username);
-        
+
         if (usernameExists) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(
-                    context.getDefaultConstraintMessageTemplate().replace("{username}", username)
-            ).addConstraintViolation();
+                    context.getDefaultConstraintMessageTemplate().replace("{username}", username))
+                    .addConstraintViolation();
         }
-        
+
         return !usernameExists;
     }
-    
+
 }

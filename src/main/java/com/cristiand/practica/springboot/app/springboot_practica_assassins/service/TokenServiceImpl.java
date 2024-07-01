@@ -69,9 +69,9 @@ public class TokenServiceImpl implements TokenService {
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado."));
 
         // Genera un nuevo token de acceso.
-        String newAccessToken = tokenUtil.createToken(user, TokenUtil.ACCESS_TOKEN_EXPIRES_IN);
+        String newAccessToken = tokenUtil.createToken(user, TokenUtil.REFRESH_TOKEN_EXPIRES_IN);
         // Retorna la respuesta con el nuevo token de acceso.
-        return new TokenResponse(newAccessToken, TokenUtil.ACCESS_TOKEN_EXPIRES_IN);
+        return new TokenResponse(newAccessToken, TokenUtil.REFRESH_TOKEN_EXPIRES_IN);
     }
 
 }

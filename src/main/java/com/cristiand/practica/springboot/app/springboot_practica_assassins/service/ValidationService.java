@@ -13,4 +13,12 @@ public interface ValidationService {
      */
     boolean existsByUsername(String username);
 
+    /**
+     * Valida si existe el correo en el sistema.
+     *
+     * @param email el correo a verificar.
+     * @return true si el correo ya se encuentra ocupado.
+     */
+    boolean existsByEmail(String email);
+
 }

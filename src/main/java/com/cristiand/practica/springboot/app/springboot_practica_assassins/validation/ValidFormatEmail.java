@@ -8,20 +8,20 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Anotación de validación personalizada para verificar si un nombre de usuario
- * ya existe en el sistema.
+ * Anotación de validación personalizada para verificar si un email tiene el
+ * formato correcto.
  */
 @Target({ ElementType.FIELD, ElementType.PARAMETER })
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = ExistsByUsernameValidation.class)
-public @interface ExistsByUsername {
+@Constraint(validatedBy = ValidFormatEmailValidation.class)
+public @interface ValidFormatEmail {
 
     /**
      * El mensaje de error que se mostrará si la validación falla.
      *
      * @return el mensaje de error.
      */
-    String message() default "El username '{username}' ya existe, escoja otro username.";
+    String message() default "El formato del email es inválido.";
 
     /**
      * Permite especificar grupos de validación.

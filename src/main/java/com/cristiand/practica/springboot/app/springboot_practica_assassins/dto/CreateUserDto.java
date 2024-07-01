@@ -1,6 +1,9 @@
 package com.cristiand.practica.springboot.app.springboot_practica_assassins.dto;
 
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.validation.ExistsByEmail;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.validation.ExistsByUsername;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.validation.ValidFormatEmail;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +27,8 @@ public record CreateUserDto(
     String lastName,
 
     @NotBlank(message = "No debe estar en blanco.")
+    @ValidFormatEmail()
+    @ExistsByEmail()
     String email,
 
     MultipartFile profileImage,

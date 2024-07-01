@@ -31,4 +31,16 @@ public interface ValidationRepository<T, ID extends Serializable> extends JpaRep
     @Query("SELECT CASE WHEN COUNT(u) > 0 THEN TRUE ELSE FALSE END FROM User u WHERE u.username = :username")
     boolean existsByUsername(@Param("username") String username);
 
+    /**
+     * Verifica si existe una entidad con un correo dado.
+     * Esta operación es de solo lectura y está envuelta en una transacción.
+     *
+     * @param email el correo a verificar.
+     * @return true si existe una entidad con el correo dado, false en caso
+     *         contrario.
+     */
+    @Transactional(readOnly = true)
+    @Query("SELECT CASE WHEN COUNT(u) > 0 THEN TRUE ELSE FALSE END FROM User u WHERE u.email = :email")
+    boolean existsByEmail(@Param("email") String email);
+
 }
