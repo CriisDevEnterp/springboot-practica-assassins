@@ -3,6 +3,7 @@ package com.cristiand.practica.springboot.app.springboot_practica_assassins.serv
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.dao.UserRepository;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.CreateUserDto;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.FindUserDto;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.UpdateUserDto;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.Role;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.User;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.enums.ErrorCode;
@@ -215,6 +216,59 @@ public class UserServiceImpl implements UserService {
             // adicional.
             throw new Exception("Ocurrió un error inesperado. " + e.getMessage());
         }
+    }
+
+    /**
+     * Actualiza un usuario existente basado en los datos proporcionados en un
+     * UpdateUserDto.
+     * 
+     * @param id            El ID del usuario a actualizar.
+     * @param updateUserDto El objeto UpdateUserDto que contiene los datos del
+     *                      usuario a actualizar.
+     * @return El usuario actualizado.
+     * @throws CustomAssassinException Si ocurre un error específico manejado por la
+     *                                 aplicación durante el proceso.
+     * @throws Exception               Si ocurre cualquier otro error inesperado
+     *                                 durante la ejecución del servicio.
+     */
+    @Override
+    @Transactional
+    public User update(Long id, UpdateUserDto updateUserDto) throws CustomAssassinException, Exception {
+        try {
+            // Busca al usuario por su ID en la base de datos.
+            User existingUser = userRepository.findByIdWithRoles(id)
+                    .orElseThrow(() -> new CustomAssassinException("Usuario no encontrado con ID: " + id,
+                            ErrorCode.NOT_FOUND));
+
+            // Actualiza los campos del usuario con los datos del UpdateUserDto.
+            User updateUser = userUtil.updateUserFromDto(existingUser, updateUserDto);
+
+            // Maneja la imagen de perfil del usuario si se proporciona en el UpdateUserDto.
+            if (updateUserDto.profileImage() != null) {
+                String profileImagePath = uploadFileUtil.handleProfileImage(updateUserDto.profileImage(), existingUser);
+                updateUser.setProfileImage(profileImagePath);
+            }
+
+            // Extrae y asigna roles al usuario si se proporcionan en el UpdateUserDto.
+            if (updateUserDto.roles() != null && !updateUserDto.roles().isEmpty()) {
+                List<Role> roles = roleUtil.extractRolesFromDto(updateUserDto);
+                updateUser.setRoles(roles);
+            }
+
+            // Guarda los cambios actualizados en el usuario.
+            User updatedUser = userRepository.save(existingUser);
+
+            // Retorna el usuario actualizado.
+            return updatedUser;
+        } catch (CustomAssassinException e) {
+            // Si se lanza una CustomAssassinException, la vuelve a lanzar sin modificarla.
+            throw e;
+        } catch (Exception e) {
+            // Si ocurre cualquier otra excepción, lanza una nueva excepción con un mensaje
+            // adicional.
+            throw new Exception("Ocurrió un error inesperado durante la actualización del usuario. " + e.getMessage());
+        }
+
     }
 
 }

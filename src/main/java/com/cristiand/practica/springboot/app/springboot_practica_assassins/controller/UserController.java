@@ -2,6 +2,7 @@ package com.cristiand.practica.springboot.app.springboot_practica_assassins.cont
 
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.CreateUserDto;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.FindUserDto;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.UpdateUserDto;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.User;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.exception.domain.CustomAssassinException;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.service.UserService;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -145,9 +147,6 @@ public class UserController {
     @PostMapping("")
     public ResponseEntity<?> save(@Valid @ModelAttribute CreateUserDto theUserDto, BindingResult bindingResult)
             throws CustomAssassinException, Exception {
-        System.out.println("----------------------------------");
-        System.out.println(theUserDto);
-        System.out.println("----------------------------------");
         // Validar el objeto CreateUserDto usando las anotaciones de validación.
         if (bindingResult.hasErrors()) {
             ValidationUtils.handleValidationErrors(bindingResult);
@@ -159,6 +158,32 @@ public class UserController {
         // Devolver una respuesta con el nuevo usuario y el código de estado 201
         // (CREATED).
         return new ResponseEntity<>(newUser, CREATED);
+    }
+
+    /**
+     * Controlador para actualizar un usuario existente utilizando un DTO junto con
+     * su proceso de validación.
+     *
+     * @param id            El ID del usuario a actualizar.
+     * @param updateUserDto El objeto UpdateUserDto que contiene los datos del
+     *                      usuario a actualizar.
+     * @return ResponseEntity con el usuario actualizado y el estado HTTP 200 (OK)
+     *         si la actualización es exitosa.
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @Valid @ModelAttribute UpdateUserDto updateUserDto,
+            BindingResult bindingResult) throws CustomAssassinException, Exception {
+        // Validar el objeto UpdateUserDto usando las anotaciones de validación.
+        if (bindingResult.hasErrors()) {
+            ValidationUtils.handleValidationErrors(bindingResult);
+        }
+
+        // Actualizar el usuario utilizando el servicio UserService.
+        User updatedUser = userService.update(id, updateUserDto);
+
+        // Devolver una respuesta con el usuario actualizado y el código de estado 200
+        // (OK).
+        return new ResponseEntity<>(updatedUser, OK);
     }
 
 }

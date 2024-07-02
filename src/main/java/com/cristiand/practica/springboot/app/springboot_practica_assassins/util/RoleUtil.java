@@ -2,6 +2,7 @@ package com.cristiand.practica.springboot.app.springboot_practica_assassins.util
 
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.dao.RoleRepository;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.CreateUserDto;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.UpdateUserDto;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.Role;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -25,15 +26,17 @@ public class RoleUtil {
     private RoleRepository roleRepository;
 
     /**
-     * Extrae roles de un CreateUserDto y los valida contra la base de datos de
+     * Extrae roles de un CreateUserDto o UpdateUserDto y los valida contra la base
+     * de datos de
      * roles almacenados.
      *
-     * @param theUserDto El CreateUserDto que contiene los roles solicitados.
+     * @param userDto El CreateUserDto o UpdateUserDto que contiene los roles
+     *                solicitados.
      * @return Una lista de objetos Role válidos y configurados para el usuario.
      * @throws IllegalAccessException Si ocurre un error al acceder a los datos de
      *                                los roles.
      */
-    public List<Role> extractRolesFromDto(CreateUserDto theUserDto) throws IllegalAccessException {
+    public List<Role> extractRolesFromDto(Object userDto) throws IllegalAccessException {
         List<Role> roles = new ArrayList<>();
 
         // Obtener el rol por defecto "ROLE_USER" de la base de datos.
@@ -47,8 +50,15 @@ public class RoleUtil {
         roles.add(defaultRole); // Añadir siempre el rol por defecto.
 
         // Verificar y convertir roles adicionales solicitados desde el DTO.
-        if (theUserDto.roles() != null && !theUserDto.roles().isEmpty()) {
-            List<Role> requestedRoles = convertRolesFromString(theUserDto.roles());
+        String rolesJson = null;
+        if (userDto instanceof CreateUserDto) {
+            rolesJson = ((CreateUserDto) userDto).roles();
+        } else if (userDto instanceof UpdateUserDto) {
+            rolesJson = ((UpdateUserDto) userDto).roles();
+        }
+
+        if (rolesJson != null && !rolesJson.isEmpty()) {
+            List<Role> requestedRoles = convertRolesFromString(rolesJson);
             for (Role requestedRole : requestedRoles) {
                 // Buscar roles existentes en la base de datos.
                 Role existingRole = roleRepository.findByName(requestedRole.getName());

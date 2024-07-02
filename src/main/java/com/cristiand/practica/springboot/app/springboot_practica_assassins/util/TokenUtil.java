@@ -26,11 +26,11 @@ public class TokenUtil {
     /**
      * Tiempo de expiración del token de acceso en segundos (5 minutos).
      */
-    public static final long ACCESS_TOKEN_EXPIRES_IN = 100L;
+    public static final long ACCESS_TOKEN_EXPIRES_IN = 300L;
     /**
      * Tiempo de expiración del token de refresco en segundos (7 días).
      */
-    public static final long REFRESH_TOKEN_EXPIRES_IN = 300L;
+    public static final long REFRESH_TOKEN_EXPIRES_IN = 3600L * 24L * 7L;
     /**
      * Emisor de los tokens JWT.
      */

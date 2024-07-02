@@ -1,6 +1,7 @@
 package com.cristiand.practica.springboot.app.springboot_practica_assassins.util;
 
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.CreateUserDto;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.UpdateUserDto;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.User;
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,6 +47,54 @@ public class UserUtil {
 
         // Devuelve el objeto User creado y poblado.
         return newUser;
+    }
+
+    /**
+     * Actualiza los campos del usuario existente con los datos del UpdateUserDto.
+     * 
+     * @param existingUser  El usuario existente que se actualizará.
+     * @param updateUserDto El objeto UpdateUserDto que contiene los nuevos datos
+     *                      del usuario.
+     * @return El usuario actualizado.
+     */
+    public User updateUserFromDto(User existingUser, UpdateUserDto updateUserDto) {
+        // Actualiza los campos del usuario existente con los datos del UpdateUserDto
+
+        // Actualiza el username si se proporciona
+        if (updateUserDto.username() != null) {
+            existingUser.setUsername(updateUserDto.username());
+        }
+
+        // Actualiza la contraseña si se proporciona y se encripta con el codificador de
+        // contraseñas
+        if (updateUserDto.password() != null) {
+            String encodedPassword = passwordEncoder.encode(updateUserDto.password());
+            existingUser.setPassword(encodedPassword);
+        }
+
+        // Actualiza el nombre si se proporciona
+        if (updateUserDto.firstName() != null) {
+            existingUser.setFirstName(updateUserDto.firstName());
+        }
+
+        // Actualiza el apellido si se proporciona
+        if (updateUserDto.lastName() != null) {
+            existingUser.setLastName(updateUserDto.lastName());
+        }
+
+        // Actualiza el correo electrónico si se proporciona
+        if (updateUserDto.email() != null) {
+            existingUser.setEmail(updateUserDto.email());
+        }
+
+        // Actualiza el estado habilitado si se proporciona
+        if (updateUserDto.enabled() != null) {
+            existingUser.setEnabled(updateUserDto.enabled());
+        }
+
+        // Otros campos que puedan necesitar actualización pueden agregarse aquí
+
+        return existingUser;
     }
 
 }

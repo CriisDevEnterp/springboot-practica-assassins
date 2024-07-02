@@ -2,6 +2,7 @@ package com.cristiand.practica.springboot.app.springboot_practica_assassins.serv
 
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.CreateUserDto;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.FindUserDto;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.UpdateUserDto;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.User;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.exception.domain.CustomAssassinException;
 import java.util.List;
@@ -85,5 +86,20 @@ public interface UserService {
      *                                 durante la ejecución del servicio.
      */
     User save(CreateUserDto theUserDto) throws CustomAssassinException, Exception;
+
+    /**
+     * Actualiza un usuario existente basado en los datos proporcionados en un
+     * UpdateUserDto.
+     * 
+     * @param id            El ID del usuario a actualizar.
+     * @param updateUserDto El objeto UpdateUserDto que contiene los datos del
+     *                      usuario a actualizar.
+     * @return El usuario actualizado.
+     * @throws CustomAssassinException Si ocurre un error específico manejado por la
+     *                                 aplicación durante el proceso.
+     * @throws Exception               Si ocurre cualquier otro error inesperado
+     *                                 durante la ejecución del servicio.
+     */
+    User update(Long id, UpdateUserDto updateUserDto) throws CustomAssassinException, Exception;
 
 }
