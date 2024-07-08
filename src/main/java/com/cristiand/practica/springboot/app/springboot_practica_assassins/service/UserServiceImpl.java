@@ -12,6 +12,8 @@ import com.cristiand.practica.springboot.app.springboot_practica_assassins.util.
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.util.UploadFileUtil;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.util.UserUtil;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -269,6 +271,46 @@ public class UserServiceImpl implements UserService {
             throw new Exception("Ocurrió un error inesperado durante la actualización del usuario. " + e.getMessage());
         }
 
+    }
+
+    /**
+     * Elimina un usuario basado en su ID.
+     *
+     * @param id ID del usuario a eliminar.
+     * @return el usuario eliminado.
+     * @throws CustomAssassinException si no se encuentra el usuario con el ID
+     *                                 especificado.
+     * @throws Exception               si ocurre un error inesperado durante la
+     *                                 eliminación del usuario.
+     */
+    @Override
+    @Transactional
+    public User deleteById(Long id) throws CustomAssassinException, Exception {
+        try {
+            // Busca el usuario por su ID en el repositorio.
+            Optional<User> userOptional = userRepository.findByIdWithRoles(id);
+
+            // Si el usuario no se encuentra, lanza una excepción personalizada.
+            if (userOptional.isEmpty()) {
+                throw new CustomAssassinException("Usuario no encontrado con id: " + id, ErrorCode.NOT_FOUND);
+            }
+
+            // Obtiene el usuario encontrado.
+            User user = userOptional.get();
+
+            // Elimina el usuario por su ID.
+            userRepository.deleteUserById(id);
+
+            // Retorna el usuario eliminado.
+            return user;
+        } catch (CustomAssassinException e) {
+            // Si se lanza una CustomAssassinException, la vuelve a lanzar sin modificarla.
+            throw e;
+        } catch (Exception e) {
+            // Si ocurre cualquier otra excepción, lanza una nueva excepción con un mensaje
+            // adicional.
+            throw new Exception("Ocurrió un error inesperado. " + e.getMessage(), e);
+        }
     }
 
 }

@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -85,5 +86,15 @@ public interface UserRepository extends ValidationRepository<User, Long> {
     @Transactional(readOnly = true)
     @Query("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.id = :id")
     public Optional<User> findByIdWithRoles(@Param("id") Long id) throws DataAccessException;
+
+    /**
+     * Elimina un usuario por su ID.
+     *
+     * @param id el ID del usuario a eliminar.
+     */
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM User u WHERE u.id = :id")
+    void deleteUserById(@Param("id") Long id);
 
 }

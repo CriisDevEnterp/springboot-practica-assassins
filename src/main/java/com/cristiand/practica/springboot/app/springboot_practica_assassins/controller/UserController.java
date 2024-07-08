@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -145,7 +146,7 @@ public class UserController {
      *         (CREATED) si la creación es exitosa.
      */
     @PostMapping("")
-    public ResponseEntity<?> save(@Valid @ModelAttribute CreateUserDto theUserDto, BindingResult bindingResult)
+    public ResponseEntity<?> saveUser(@Valid @ModelAttribute CreateUserDto theUserDto, BindingResult bindingResult)
             throws CustomAssassinException, Exception {
         // Validar el objeto CreateUserDto usando las anotaciones de validación.
         if (bindingResult.hasErrors()) {
@@ -171,7 +172,7 @@ public class UserController {
      *         si la actualización es exitosa.
      */
     @PutMapping("/{id}")
-    public ResponseEntity<?> update(@PathVariable Long id, @Valid @ModelAttribute UpdateUserDto updateUserDto,
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @Valid @ModelAttribute UpdateUserDto updateUserDto,
             BindingResult bindingResult) throws CustomAssassinException, Exception {
         // Validar el objeto UpdateUserDto usando las anotaciones de validación.
         if (bindingResult.hasErrors()) {
@@ -184,6 +185,22 @@ public class UserController {
         // Devolver una respuesta con el usuario actualizado y el código de estado 200
         // (OK).
         return new ResponseEntity<>(updatedUser, OK);
+    }
+
+    /**
+     * Elimina un usuario basado en su ID.
+     *
+     * @param id El ID del usuario a eliminar.
+     * @return ResponseEntity con el resultado de la operación.
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<User> deleteUser(@PathVariable Long id) throws CustomAssassinException, Exception {
+        // Eliminar al usuario utilizando el servicio "deleteById".
+        User deletedUser = userService.deleteById(id);
+
+        // Devovler una respuesta con el usuario eliminado y el código de estado 200
+        // (OK).
+        return new ResponseEntity<>(deletedUser, OK);
     }
 
 }

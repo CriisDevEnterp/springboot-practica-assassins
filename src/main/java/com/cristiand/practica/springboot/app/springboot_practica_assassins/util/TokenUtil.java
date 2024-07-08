@@ -89,6 +89,7 @@ public class TokenUtil {
                 .claim("lastName", user.getLastName())
                 .claim("email", user.getEmail())
                 .claim("jti", UUID.randomUUID().toString())
+                .claim("profileImage", "http://localhost:8080/"+user.getProfileImage())
                 .build();
 
         // Codifica y retorna el token.

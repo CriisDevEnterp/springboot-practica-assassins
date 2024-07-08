@@ -121,7 +121,7 @@ public class UserUtilTest {
         // Act
         validator.validate(createUserDto, bindingResult);
         CustomAssassinException exception = assertThrows(CustomAssassinException.class, () -> {
-            userController.save(createUserDto, bindingResult);
+            userController.saveUser(createUserDto, bindingResult);
         });
 
         // Assert

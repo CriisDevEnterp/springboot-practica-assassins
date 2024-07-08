@@ -102,4 +102,16 @@ public interface UserService {
      */
     User update(Long id, UpdateUserDto updateUserDto) throws CustomAssassinException, Exception;
 
+    /**
+     * Elimina un usuario basado en su ID.
+     *
+     * @param id ID del usuario a eliminar.
+     * @return el usuario eliminado.
+     * @throws CustomAssassinException si no se encuentra el usuario con el ID
+     *                                 especificado.
+     * @throws Exception               si ocurre un error inesperado durante la
+     *                                 eliminación del usuario.
+     */
+    User deleteById(Long id) throws CustomAssassinException, Exception;
+
 }
