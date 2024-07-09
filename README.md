@@ -4,6 +4,12 @@ Este es un proyecto de práctica para aprender y trabajar con Spring Boot.
 
 ## Cómo levantar el proyecto
 
+### Crear carpeta "uploads" dentro de la raiz del proyecto
+1. Crear carpeta uploads:
+    ```
+    springboot-practica-assassins/uploads
+    ```
+
 ### Generar llaves para OAuth2 con JWT
 
 1. Construye la llave privada:

@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.exception.domain.CustomAssassinException;
+
 public class EncryptionServiceImplTest {
 
     private EncryptionService encryptionService;
@@ -26,14 +28,14 @@ public class EncryptionServiceImplTest {
 
     @Test
     public void testEncryptNullData() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(CustomAssassinException.class, () -> {
             encryptionService.encrypt(null);
         });
     }
 
     @Test
     public void testDecryptNullData() {
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(CustomAssassinException.class, () -> {
             encryptionService.decrypt(null);
         });
     }

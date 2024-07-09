@@ -106,7 +106,7 @@ public class UserControllerIntegrationTest {
                 rolesJson);
 
         // Act & Assert
-        userUtilTest.validateAndAssertError(createUserDto, "email", "No debe estar en blanco.");
+        userUtilTest.validateAndAssertError(createUserDto, "email", "El formato del email es inválido.");
     }
 
 }

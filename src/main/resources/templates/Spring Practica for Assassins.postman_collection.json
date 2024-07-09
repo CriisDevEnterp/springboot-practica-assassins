@@ -13,61 +13,57 @@
 					"name": "Users",
 					"item": [
 						{
-							"name": "Buscar usuarios",
-							"request": {
-								"auth": {
-									"type": "bearer",
-									"bearer": [
-										{
-											"key": "token",
-											"value": "{{accessToken}}",
-											"type": "string"
-										}
-									]
-								},
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"usuario1\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:8080/api/users/search",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"api",
-										"users",
-										"search"
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "Crear usuario",
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"usuario1\",\r\n    \"password\": \"123456\",\r\n    \"enabled\": true,\r\n    \"roles\": [\r\n        {\r\n            \"name\": \"ROLE_ADMIN\"\r\n        },\r\n        {\r\n            \"name\": \"ROLE_USER\"\r\n        }\r\n    ]\r\n}\r\n",
-									"options": {
-										"raw": {
-											"language": "json"
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "cristian",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123456",
+											"type": "text"
+										},
+										{
+											"key": "firstName",
+											"value": "Cristian",
+											"type": "text"
+										},
+										{
+											"key": "lastName",
+											"value": "de la Rosa",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "cristian@prueba.com",
+											"type": "text"
+										},
+										{
+											"key": "enabled",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "profileImage",
+											"type": "file",
+											"src": "/C:/Users/cristian.delarosa/Downloads/foto_de_perfil.jpg"
+										},
+										{
+											"key": "roles",
+											"value": "[{\"name\": \"ROLE_ADMIN\"}, {\"name\": \"ROLE_USER\"}]",
+											"type": "text"
 										}
-									}
+									]
 								},
 								"url": {
-									"raw": "http://localhost:8080/api/users/create",
+									"raw": "http://localhost:8080/api/users",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -75,8 +71,7 @@
 									"port": "8080",
 									"path": [
 										"api",
-										"users",
-										"create"
+										"users"
 									]
 								}
 							},
@@ -123,7 +118,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"usuario1\",\r\n    \"password\": \"123456\"\r\n}\r\n",
+									"raw": "{\r\n    \"username\": \"david\",\r\n    \"password\": \"123456\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -131,14 +126,329 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8080/login",
+									"raw": "http://localhost:8080/auth/login",
 									"protocol": "http",
 									"host": [
 										"localhost"
 									],
 									"port": "8080",
 									"path": [
+										"auth",
 										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Refresh Token",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Guardar accessToken en variable de entorno\", function() {\r",
+											"    var jsonResponse = pm.response.json();\r",
+											"    var accessToken = jsonResponse.accessToken;\r",
+											"\r",
+											"    pm.environment.set(\"accessToken\", accessToken);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{accessToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"refreshToken\": \"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxIiwic2NvcGUiOiJST0xFX0FETUlOIFJPTEVfVVNFUiIsImlzcyI6Imh0dHA6Ly9teWJhY2tlbmQuY29tIiwibGFzdF9uYW1lIjoiZGUgbGEgUm9zYSIsImV4cCI6MTcxOTAyNjY3NSwiaWF0IjoxNzE4NDIxODc1LCJmaXJzdF9uYW1lIjoiQ3Jpc3RpYW4iLCJqdGkiOiJiNThmZDMxYi03YzI1LTRmYTktYTc0Ny0yZGY1ODE4NmI0NTgiLCJlbWFpbCI6ImNyaXN0aWFuQHBydWViYS5jb20iLCJ1c2VybmFtZSI6ImNyaXN0aWFuIn0.GePtzYLXm9I1rBzu-6ouJVPxlaedJhbqxiTIbXzNRSNd1Jwq-Xr5xGHovk18nkLCdIsobBsW9rq4Hvq4ho90GZkVX1rxHTioHKXTkFmEmmWO4a1K-WlWBRhjX2fwu63k1Y3YlL-rnLWUMqkiHSYRozUGh0JoqzIKNMPab507sO79HUO6sEeNmtDsXZbB8CWXAH6O4H7wITBbvHz_6DLNyModRPknf96UhSSaXYupKhraEuHsaHPwsM2j2HKTxU3wpQPRJoWRfFHbzgNBlrnt5RtH9U7736xOEVz0jodGrSZHa4ylFA87VFpJlgeA495Ng0UgYRg9X8LeO7lVkV_geg\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/auth/refresh",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"auth",
+										"refresh"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listado de usuarios",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/users/all",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"users",
+										"all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Página de usuarios",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/users/all/paged?page=0&size=5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"users",
+										"all",
+										"paged"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Obtener usuario por ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/users/9",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"users",
+										"9"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar usuarios",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"cristian\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/users/filter",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"users",
+										"filter"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Actualizar usuario",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "david",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123456",
+											"type": "text"
+										},
+										{
+											"key": "firstName",
+											"value": "David",
+											"type": "text"
+										},
+										{
+											"key": "lastName",
+											"value": "de la Rosa",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "david@prueba.com",
+											"type": "text"
+										},
+										{
+											"key": "enabled",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "profileImage",
+											"type": "file",
+											"src": []
+										},
+										{
+											"key": "roles",
+											"value": "[{\"name\": \"ROLE_ADMIN\"}, {\"name\": \"ROLE_USER\"}]",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:8080/api/users/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"users",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar Usuario",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/api/users/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"api",
+										"users",
+										"1"
 									]
 								}
 							},
@@ -165,7 +475,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/api/pokemon/ditto",
+									"raw": "http://localhost:8080/api/pokemons/ditto",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -173,7 +483,7 @@
 									"port": "8080",
 									"path": [
 										"api",
-										"pokemon",
+										"pokemons",
 										"ditto"
 									]
 								}
@@ -244,17 +554,12 @@
 							"response": []
 						}
 					]
-				}
-			]
-		},
-		{
-			"name": "Dockerizer",
-			"item": [
+				},
 				{
-					"name": "Users",
+					"name": "Roles",
 					"item": [
 						{
-							"name": "Buscar usuarios",
+							"name": "Listado de roles",
 							"request": {
 								"auth": {
 									"type": "bearer",
@@ -266,49 +571,86 @@
 										}
 									]
 								},
-								"method": "POST",
+								"method": "GET",
 								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"usuario1\"\r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
 								"url": {
-									"raw": "http://localhost:8081/api/users/search",
+									"raw": "http://localhost:8080/api/roles/all",
 									"protocol": "http",
 									"host": [
 										"localhost"
 									],
-									"port": "8081",
+									"port": "8080",
 									"path": [
 										"api",
-										"users",
-										"search"
+										"roles",
+										"all"
 									]
 								}
 							},
 							"response": []
-						},
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Dockerizer",
+			"item": [
+				{
+					"name": "Users",
+					"item": [
 						{
 							"name": "Crear usuario",
 							"request": {
 								"method": "POST",
 								"header": [],
 								"body": {
-									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"usuario1\",\r\n    \"password\": \"123456\",\r\n    \"enabled\": true,\r\n    \"roles\": [\r\n        {\r\n            \"name\": \"ROLE_ADMIN\"\r\n        },\r\n        {\r\n            \"name\": \"ROLE_USER\"\r\n        }\r\n    ]\r\n}\r\n",
-									"options": {
-										"raw": {
-											"language": "json"
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "cristian",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123456",
+											"type": "text"
+										},
+										{
+											"key": "firstName",
+											"value": "Cristian",
+											"type": "text"
+										},
+										{
+											"key": "lastName",
+											"value": "de la Rosa",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "cristian@prueba.com",
+											"type": "text"
+										},
+										{
+											"key": "enabled",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "profileImage",
+											"type": "file",
+											"src": "/C:/Users/cristian.delarosa/Downloads/foto_de_perfil.jpg"
+										},
+										{
+											"key": "roles",
+											"value": "[{\"name\": \"ROLE_ADMIN\"}, {\"name\": \"ROLE_USER\"}]",
+											"type": "text"
 										}
-									}
+									]
 								},
 								"url": {
-									"raw": "http://localhost:8081/api/users/create",
+									"raw": "http://localhost:8081/api/users",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -316,8 +658,7 @@
 									"port": "8081",
 									"path": [
 										"api",
-										"users",
-										"create"
+										"users"
 									]
 								}
 							},
@@ -364,7 +705,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"username\": \"usuario1\",\r\n    \"password\": \"123456\"\r\n}\r\n",
+									"raw": "{\r\n    \"username\": \"david\",\r\n    \"password\": \"123456\"\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -372,14 +713,329 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:8081/login",
+									"raw": "http://localhost:8081/auth/login",
 									"protocol": "http",
 									"host": [
 										"localhost"
 									],
 									"port": "8081",
 									"path": [
+										"auth",
 										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Refresh Token",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Guardar accessToken en variable de entorno\", function() {\r",
+											"    var jsonResponse = pm.response.json();\r",
+											"    var accessToken = jsonResponse.accessToken;\r",
+											"\r",
+											"    pm.environment.set(\"accessToken\", accessToken);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{accessToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"refreshToken\": \"eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxIiwic2NvcGUiOiJST0xFX0FETUlOIFJPTEVfVVNFUiIsImlzcyI6Imh0dHA6Ly9teWJhY2tlbmQuY29tIiwibGFzdF9uYW1lIjoiZGUgbGEgUm9zYSIsImV4cCI6MTcxOTAyNjY3NSwiaWF0IjoxNzE4NDIxODc1LCJmaXJzdF9uYW1lIjoiQ3Jpc3RpYW4iLCJqdGkiOiJiNThmZDMxYi03YzI1LTRmYTktYTc0Ny0yZGY1ODE4NmI0NTgiLCJlbWFpbCI6ImNyaXN0aWFuQHBydWViYS5jb20iLCJ1c2VybmFtZSI6ImNyaXN0aWFuIn0.GePtzYLXm9I1rBzu-6ouJVPxlaedJhbqxiTIbXzNRSNd1Jwq-Xr5xGHovk18nkLCdIsobBsW9rq4Hvq4ho90GZkVX1rxHTioHKXTkFmEmmWO4a1K-WlWBRhjX2fwu63k1Y3YlL-rnLWUMqkiHSYRozUGh0JoqzIKNMPab507sO79HUO6sEeNmtDsXZbB8CWXAH6O4H7wITBbvHz_6DLNyModRPknf96UhSSaXYupKhraEuHsaHPwsM2j2HKTxU3wpQPRJoWRfFHbzgNBlrnt5RtH9U7736xOEVz0jodGrSZHa4ylFA87VFpJlgeA495Ng0UgYRg9X8LeO7lVkV_geg\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/auth/refresh",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"auth",
+										"refresh"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Listado de usuarios",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/api/users/all",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"users",
+										"all"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Página de usuarios",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/api/users/all/paged?page=0&size=5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"users",
+										"all",
+										"paged"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Obtener usuario por ID",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/api/users/9",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"users",
+										"9"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Buscar usuarios",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"cristian\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/users/filter",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"users",
+										"filter"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Actualizar usuario",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "username",
+											"value": "david",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123456",
+											"type": "text"
+										},
+										{
+											"key": "firstName",
+											"value": "David",
+											"type": "text"
+										},
+										{
+											"key": "lastName",
+											"value": "de la Rosa",
+											"type": "text"
+										},
+										{
+											"key": "email",
+											"value": "david@prueba.com",
+											"type": "text"
+										},
+										{
+											"key": "enabled",
+											"value": "true",
+											"type": "text"
+										},
+										{
+											"key": "profileImage",
+											"type": "file",
+											"src": []
+										},
+										{
+											"key": "roles",
+											"value": "[{\"name\": \"ROLE_ADMIN\"}, {\"name\": \"ROLE_USER\"}]",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "http://localhost:8081/api/users/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"users",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Eliminar Usuario",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/api/users/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"users",
+										"1"
 									]
 								}
 							},
@@ -406,7 +1062,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8081/api/pokemon/ditto",
+									"raw": "http://localhost:8081/api/pokemons/ditto",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -414,7 +1070,7 @@
 									"port": "8081",
 									"path": [
 										"api",
-										"pokemon",
+										"pokemons",
 										"ditto"
 									]
 								}
@@ -479,6 +1135,42 @@
 									"path": [
 										"encryption",
 										"decrypt"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Roles",
+					"item": [
+						{
+							"name": "Listado de roles",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{accessToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8081/api/roles/all",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8081",
+									"path": [
+										"api",
+										"roles",
+										"all"
 									]
 								}
 							},
