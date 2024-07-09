@@ -1,75 +1,66 @@
-// package com.cristiand.practica.springboot.app.springboot_practica_assassins.service;
+package com.cristiand.practica.springboot.app.springboot_practica_assassins.service;
 
-// import static org.junit.jupiter.api.Assertions.assertEquals;
-// import static org.junit.jupiter.api.Assertions.assertNotNull;
-// import static org.junit.jupiter.api.Assertions.assertThrows;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.ReadPokemonDto;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.SpeciesDto;
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.exception.domain.CustomAssassinException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-// import org.junit.jupiter.api.BeforeEach;
-// import org.junit.jupiter.api.Test;
-// import org.springframework.web.client.RestTemplate;
-// import org.springframework.web.server.ResponseStatusException;
+@SpringBootTest
+@Transactional
+public class PokemonServiceImplTest {
 
-// import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.ReadPokemonDto;
-// import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.SpeciesDto;
+    private PokemonServiceImpl pokemonService;
+    private RestTemplate restTemplate;
 
-// import java.util.ArrayList;
-// import java.util.LinkedHashMap;
+    @BeforeEach
+    public void setUp() {
+        restTemplate = new RestTemplate();
+        pokemonService = new PokemonServiceImpl("https://pokeapi.co/api/v2/pokemon/", restTemplate);
+    }
 
-// public class PokemonServiceImplTest {
+    @Test
+    public void testGetPokemonInfoSuccess() throws CustomAssassinException, Exception {
+        String pokemonName = "pikachu";
 
-//     private PokemonServiceImpl pokemonService;
-//     private RestTemplate restTemplate;
+        ReadPokemonDto actualPokemon = pokemonService.getPokemonInfo(pokemonName);
 
-//     @BeforeEach
-//     public void setUp() {
-//         restTemplate = new RestTemplate();
-//         pokemonService = new PokemonServiceImpl("https://pokeapi.co/api/v2/pokemon/", restTemplate);
-//     }
+        // Verificar que el objeto no sea nulo
+        assertNotNull(actualPokemon);
 
-//     @Test
-//     public void testGetPokemonInfoSuccess() {
-//         String pokemonName = "pikachu";
+        // Verificar los tipos de datos esperados
+        assertEquals(Integer.class, Integer.valueOf(actualPokemon.id()).getClass());
+        assertEquals(Boolean.class, actualPokemon.is_default().getClass());
+        assertEquals(String.class, actualPokemon.location_area_encounters().getClass());
+        assertEquals(ArrayList.class, actualPokemon.moves().getClass());
+        assertEquals(String.class, actualPokemon.name().getClass());
+        assertEquals(Integer.class, Integer.valueOf(actualPokemon.order()).getClass());
+        assertEquals(ArrayList.class, actualPokemon.past_abilities().getClass());
+        assertEquals(ArrayList.class, actualPokemon.past_types().getClass());
+        assertEquals(SpeciesDto.class, actualPokemon.species().getClass());
+        assertEquals(LinkedHashMap.class, actualPokemon.sprites().getClass());
+        assertEquals(ArrayList.class, actualPokemon.stats().getClass());
+        assertEquals(ArrayList.class, actualPokemon.types().getClass());
+        assertEquals(Integer.class, Integer.valueOf(actualPokemon.weight()).getClass());
+    }
 
-//         ReadPokemonDto actualPokemon = pokemonService.getPokemonInfo(pokemonName);
+    @Test
+    public void testGetPokemonInfoNotFound() {
+        String pokemonName = "unknownPokemon";
 
-//         // Verificar que el objeto no sea nulo
-//         assertNotNull(actualPokemon);
-
-//         // Verificar los tipos de datos esperados
-//         assertEquals(Integer.class, Integer.valueOf(actualPokemon.id()).getClass());
-//         assertEquals(Boolean.class, actualPokemon.is_default().getClass());
-//         assertEquals(String.class, actualPokemon.location_area_encounters().getClass());
-//         assertEquals(ArrayList.class, actualPokemon.moves().getClass());
-//         assertEquals(String.class, actualPokemon.name().getClass());
-//         assertEquals(Integer.class, Integer.valueOf(actualPokemon.order()).getClass());
-//         assertEquals(ArrayList.class, actualPokemon.past_abilities().getClass());
-//         assertEquals(ArrayList.class, actualPokemon.past_types().getClass());
-//         assertEquals(SpeciesDto.class, actualPokemon.species().getClass());
-//         assertEquals(LinkedHashMap.class, actualPokemon.sprites().getClass());
-//         assertEquals(ArrayList.class, actualPokemon.stats().getClass());
-//         assertEquals(ArrayList.class, actualPokemon.types().getClass());
-//         assertEquals(Integer.class, Integer.valueOf(actualPokemon.weight()).getClass());
-//     }
-
-//     @Test
-//     public void testGetPokemonInfoNotFound() {
-//         String pokemonName = "unknownPokemon";
-
-//         // Simular la excepción al llamar al método getForObject
-//         assertThrows(ResponseStatusException.class, () -> {
-//             pokemonService.getPokemonInfo(pokemonName);
-//         });
-//     }
-
-//     @Test
-//     public void testGetPokemonInfoOtherError() {
-//         String pokemonName = "errorPokemon";
-
-//         // Simular la excepción al llamar al método getForObject
-//         assertThrows(ResponseStatusException.class, () -> {
-//             pokemonService.getPokemonInfo(pokemonName);
-//         });
-//     }
+        // Simular la excepción al llamar al método getForObject
+        assertThrows(CustomAssassinException.class, () -> {
+            pokemonService.getPokemonInfo(pokemonName);
+        });
+    }
     
-// }
+}
 

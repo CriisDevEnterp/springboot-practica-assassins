@@ -1,13 +1,15 @@
 package com.cristiand.practica.springboot.app.springboot_practica_assassins.service;
 
+import com.cristiand.practica.springboot.app.springboot_practica_assassins.exception.domain.CustomAssassinException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import com.cristiand.practica.springboot.app.springboot_practica_assassins.exception.domain.CustomAssassinException;
-
+@SpringBootTest
+@Transactional
 public class EncryptionServiceImplTest {
 
     private EncryptionService encryptionService;

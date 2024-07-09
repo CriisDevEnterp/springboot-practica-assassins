@@ -4,7 +4,6 @@ import com.cristiand.practica.springboot.app.springboot_practica_assassins.dto.C
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.entity.User;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.exception.domain.CustomAssassinException;
 import com.cristiand.practica.springboot.app.springboot_practica_assassins.util.UserUtilTest;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
